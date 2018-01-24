@@ -20,35 +20,35 @@ LOGROTATE_CONFIG="$LOG_FILE {
 
 
 # dependencies
-sudo apt-get update;
-sudo apt-get remove -y sendmail sendmail-bin postfix apache2;
-sudo apt-get purge -y postfix exim4 sendmail sendmail-bin;
-sudo apt-get install -y git curl nano build-essential python2.7 mongodb redis-server;
-curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -;
-sudo apt-get install -y nodejs;
+apt-get update;
+apt-get remove -y sendmail sendmail-bin postfix apache2;
+apt-get purge -y postfix exim4 sendmail sendmail-bin;
+apt-get install -y git curl nano build-essential python2.7 mongodb redis-server;
+curl -sL https://deb.nodesource.com/setup_0.12 | -E bash -;
+apt-get install -y nodejs;
 
 # Clone and setup the application
 cd /opt;
-sudo rm -rf mailsac;
-sudo git clone https://github.com/ruffrey/mailsac.git mailsac --depth 1;
+rm -rf mailsac;
+git clone https://github.com/ruffrey/mailsac.git mailsac --depth 1;
 cd mailsac;
-sudo npm i --production;
+npm i --production;
 
 # Setup init scripts
-sudo rm -f $CONF_FILE;
-sudo cp -f install/mailsac.conf $CONF_DIR;
-sudo chmod +x $CONF_FILE;
+rm -f $CONF_FILE;
+cp -f install/mailsac.conf $CONF_DIR;
+chmod +x $CONF_FILE;
 
 # Setup log rotation
-sudo touch $LOG_FILE;
-sudo rm -f $LOGROTATE_FILE;
-echo "$LOGROTATE_CONFIG" | sudo tee --append "$LOGROTATE_FILE";
+touch $LOG_FILE;
+rm -f $LOGROTATE_FILE;
+echo "$LOGROTATE_CONFIG" | tee --append "$LOGROTATE_FILE";
 
 # Ensure proper syntax and load the conf
 init-checkconf -d /etc/init/mailsac.conf;
-sudo service mailsac start;
+service mailsac start;
 
 echo \n\nSuccess - installed at /opt/mailsac;
-echo Edit configuration at $CONF_FILE, then run \'sudo service mailsac restart\';
+echo Edit configuration at $CONF_FILE, then run \'service mailsac restart\';
 echo Check startup logs at /var/log/upstart/mailsac.log;
 echo Check mailsac logs at $LOG_FILE;
